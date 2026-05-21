@@ -10,6 +10,7 @@ export default function HomePage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    document.title = "SpacedOut — Dashboard";
     Promise.all([
       apiFetch('/stats'),
       apiFetch('/decks')

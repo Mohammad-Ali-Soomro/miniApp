@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import useApi from '../hooks/useApi';
 import CardModal from '../components/CardModal';
+import { useToast } from '../components/Toast';
 
 export default function DeckPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { apiFetch } = useApi();
+  const { addToast } = useToast();
   
   const [deck, setDeck] = useState(null);
   const [cards, setCards] = useState([]);
@@ -32,6 +34,7 @@ export default function DeckPage() {
       
       setDeck(foundDeck);
       setCards(cardsData);
+      document.title = `SpacedOut — ${foundDeck.name}`;
       setError(null);
     } catch (err) {
       setError(err.message);
@@ -51,16 +54,18 @@ export default function DeckPage() {
           method: 'PUT',
           body: JSON.stringify(cardData)
         });
+        addToast('Card updated successfully!', 'success');
       } else {
         await apiFetch(`/decks/${id}/cards`, {
           method: 'POST',
           body: JSON.stringify(cardData)
         });
+        addToast('Card created successfully!', 'success');
       }
       await fetchDeckData();
     } catch (err) {
       console.error(err);
-      alert('Failed to save card: ' + err.message);
+      addToast('Failed to save card: ' + err.message, 'error');
     }
   };
 
@@ -69,10 +74,11 @@ export default function DeckPage() {
     
     try {
       await apiFetch(`/cards/${cardId}`, { method: 'DELETE' });
+      addToast('Card deleted!', 'success');
       await fetchDeckData();
     } catch (err) {
       console.error(err);
-      alert('Failed to delete card: ' + err.message);
+      addToast('Failed to delete card: ' + err.message, 'error');
     }
   };
 

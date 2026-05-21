@@ -5,7 +5,9 @@ const db = require('../db');
 router.get('/', (req, res) => {
   try {
     const decks = db.prepare(`
-      SELECT decks.*, COUNT(cards.id) as card_count 
+      SELECT decks.*, 
+             COUNT(cards.id) as card_count,
+             SUM(CASE WHEN datetime(cards.next_review) <= datetime('now') THEN 1 ELSE 0 END) as due_count
       FROM decks 
       LEFT JOIN cards ON decks.id = cards.deck_id 
       GROUP BY decks.id

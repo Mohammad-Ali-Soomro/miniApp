@@ -14,10 +14,15 @@ export default function DeckCard({ deck, onEdit, onDelete }) {
         navigate(`/decks/${deck.id}`);
       }}
     >
+      {deck.due_count > 0 && (
+        <div className="absolute top-2 right-2 z-10 animate-pulse bg-neo-orange border-[2px] border-neo-black px-2 py-1 text-xs font-bold shadow-[2px_2px_0px_#1A1A1A]">
+          {deck.due_count} Due
+        </div>
+      )}
       <div className={`h-[6px] w-full ${topColor} absolute top-0 left-0 border-b-[3px] border-neo-black`}></div>
-      <div className="p-5 pt-6 flex-grow flex flex-col bg-white">
+      <div className="p-5 pt-8 flex-grow flex flex-col bg-white">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="text-xl font-bold truncate pr-2">{deck.name}</h3>
+          <h3 className="text-xl font-bold truncate pr-3">{deck.name}</h3>
           <div className="flex gap-2">
             <button onClick={(e) => { e.stopPropagation(); onEdit(deck); }} className="text-lg hover:scale-110 transition-transform" title="Edit">✏️</button>
             <button onClick={(e) => { e.stopPropagation(); onDelete(deck.id); }} className="text-lg hover:scale-110 transition-transform" title="Delete">🗑️</button>

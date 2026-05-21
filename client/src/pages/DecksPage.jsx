@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 import useApi from '../hooks/useApi';
 import DeckCard from '../components/DeckCard';
 import DeckModal from '../components/DeckModal';
+import { useToast } from '../components/Toast';
 
 export default function DecksPage() {
   const { apiFetch } = useApi();
+  const { addToast } = useToast();
   const [decks, setDecks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -26,6 +28,7 @@ export default function DecksPage() {
   };
 
   useEffect(() => {
+    document.title = "SpacedOut — My Decks";
     fetchDecks();
   }, [apiFetch]);
 
@@ -36,16 +39,18 @@ export default function DecksPage() {
           method: 'PUT',
           body: JSON.stringify(deckData)
         });
+        addToast('Deck updated successfully!', 'success');
       } else {
         await apiFetch('/decks', {
           method: 'POST',
           body: JSON.stringify(deckData)
         });
+        addToast('Deck created successfully!', 'success');
       }
       await fetchDecks();
     } catch (err) {
       console.error(err);
-      alert('Failed to save deck: ' + err.message);
+      addToast('Failed to save deck: ' + err.message, 'error');
     }
   };
 
@@ -56,10 +61,11 @@ export default function DecksPage() {
     
     try {
       await apiFetch(`/decks/${id}`, { method: 'DELETE' });
+      addToast('Deck deleted', 'success');
       await fetchDecks();
     } catch (err) {
       console.error(err);
-      alert('Failed to delete deck: ' + err.message);
+      addToast('Failed to delete deck: ' + err.message, 'error');
     }
   };
 
@@ -80,7 +86,7 @@ export default function DecksPage() {
           <div className="h-10 bg-gray-300 w-1/3 rounded border-[3px] border-neo-black"></div>
           <div className="h-10 bg-gray-300 w-32 rounded border-[3px] border-neo-black"></div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {[1,2,3].map(k => (
             <div key={k} className="h-[220px] bg-gray-300 border-[3px] border-neo-black rounded"></div>
           ))}
@@ -124,7 +130,7 @@ export default function DecksPage() {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {decks.map(deck => (
             <DeckCard 
               key={deck.id} 

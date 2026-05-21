@@ -1,11 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import useApi from '../hooks/useApi';
+import { useToast } from '../components/Toast';
 
 export default function StudyPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { apiFetch } = useApi();
+  const { addToast } = useToast();
   
   const [deck, setDeck] = useState(null);
   const [cards, setCards] = useState([]);
@@ -36,6 +38,7 @@ export default function StudyPage() {
 
       setDeck(foundDeck);
       setCards(studyCards);
+      document.title = `SpacedOut — Studying: ${foundDeck.name}`;
       
       // Reset state for new round
       setCurrentIndex(0);
@@ -72,6 +75,8 @@ export default function StudyPage() {
         else nextStats.correct++;
         return nextStats;
       });
+      
+      addToast('Review saved!', 'success');
 
       if (currentIndex >= cards.length - 1) {
         setSessionDone(true);
@@ -81,7 +86,7 @@ export default function StudyPage() {
       }
     } catch (err) {
       console.error(err);
-      alert('Failed to save review: ' + err.message);
+      addToast('Failed to save review: ' + err.message, 'error');
     } finally {
       setIsSubmittingRate(false);
     }
@@ -199,11 +204,13 @@ export default function StudyPage() {
   const progressPercent = Math.round((currentIndex / cards.length) * 100);
 
   return (
-    <div className="max-w-[700px] mx-auto mt-4 px-2">
-      <div className="mb-4 text-center font-bold pb-4 border-b-2 border-neo-black border-dashed flex justify-between items-center">
-        <Link to={`/decks/${id}`} className="hover:underline">← Exit Study</Link>
-        <div className="text-xl">Studying: <span className="underline decoration-4 decoration-neo-yellow">{deck?.name}</span></div>
-        <div className="w-[100px]"></div> {/* Spacer for center alignment */}
+    <div className="max-w-[700px] mx-auto mt-4 px-2 w-full">
+      <div className="mb-4 text-center font-bold pb-4 border-b-2 border-neo-black border-dashed flex justify-between items-center relative gap-2">
+        <Link to={`/decks/${id}`} className="hover:underline hidden sm:block">← Exit Study</Link>
+        <div className="text-xl mx-auto sm:mx-0 truncate pr-16 sm:pr-0">Studying: <span className="underline decoration-4 decoration-neo-yellow">{deck?.name}</span></div>
+        <Link to={`/decks/${id}`} className="absolute sm:relative top-0 right-[-10px] sm:top-auto sm:right-auto bg-gray-200 border-2 border-neo-black px-3 py-1 text-xs md:text-sm font-bold shadow-[2px_2px_0px_#1A1A1A] hover:-translate-y-px hover:shadow-[3px_3px_0px_#1A1A1A] active:translate-y-px active:shadow-none text-neo-black no-underline whitespace-nowrap">
+          Give Up
+        </Link>
       </div>
 
       <div className="mb-8 relative">
@@ -218,7 +225,7 @@ export default function StudyPage() {
         </div>
       </div>
 
-      <div className="w-full max-w-[560px] h-[320px] mx-auto [perspective:1000px] mb-8 relative">
+      <div className="w-full max-w-[560px] h-[360px] sm:h-[320px] mx-auto [perspective:1000px] mb-8 relative">
         <div 
           className={`relative w-full h-full transition-transform duration-500 [transform-style:preserve-3d] ${isFlipped ? '[transform:rotateY(180deg)]' : ''}`}
           onClick={() => { if (!isFlipped) setIsFlipped(true); }}
