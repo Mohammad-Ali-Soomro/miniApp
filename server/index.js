@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/decks', decksRouter);
-app.use('/api/cards', cardsRouter);
+app.use('/api', cardsRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
