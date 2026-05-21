@@ -1,11 +1,22 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Layout from './components/Layout';
+import HomePage from './pages/HomePage';
+import DecksPage from './pages/DecksPage';
+import DeckPage from './pages/DeckPage';
+import StudyPage from './pages/StudyPage';
+
 function App() {
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-slate-800 mb-4">SpacedOut</h1>
-        <p className="text-lg text-slate-600">Your flashcard app with spaced repetition.</p>
-      </div>
-    </div>
+    <Router>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/decks" element={<DecksPage />} />
+          <Route path="/decks/:id" element={<DeckPage />} />
+          <Route path="/study/:id" element={<StudyPage />} />
+        </Routes>
+      </Layout>
+    </Router>
   )
 }
 

@@ -1,3 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+    background-color: #FAFAFA;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+@layer components {
+    .neo-card {
+        border: 3px solid #1A1A1A;
+        box-shadow: 4px 4px 0px #1A1A1A;
+        border-radius: 4px;
+        background: white;
+        transition: box-shadow 0.1s, transform 0.1s;
+    }
+
+    .neo-card:hover {
+        box-shadow: 6px 6px 0px #1A1A1A;
+        transform: translate(-1px, -1px);
+    }
+
+    .neo-btn {
+        border: 3px solid #1A1A1A;
+        box-shadow: 3px 3px 0px #1A1A1A;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.1s;
+    }
+
+    .neo-btn:hover {
+        box-shadow: 5px 5px 0px #1A1A1A;
+        transform: translate(-1px, -1px);
+    }
+
+    .neo-btn:active {
+        box-shadow: 1px 1px 0px #1A1A1A;
+        transform: translate(2px, 2px);
+    }
+
+    .neo-input {
+        border: 3px solid #1A1A1A;
+        padding: 10px 14px;
+        font-size: 1rem;
+        outline: none;
+        font-family: inherit;
+    }
+
+    .neo-input:focus {
+        box-shadow: 3px 3px 0px #1A1A1A;
+    }
+}
